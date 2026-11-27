@@ -98,11 +98,6 @@ function Portal(): ReactNode {
       <main className="app-main" id="main-content">
         {screen}
       </main>
-      <footer className="app-footer">
-        <span>
-          Workplace pulse only · Individual answers stay private; HR sees team averages only.
-        </span>
-      </footer>
     </div>
   );
 }

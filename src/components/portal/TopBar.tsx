@@ -10,7 +10,6 @@ export function TopBar({ user, onSignOut }: { user: Me; onSignOut: () => void })
           <img className="brand-logo" src="/logo.svg" alt="" width="38" height="38" />
           <span className="brand-name">
             PortalStays
-            <span className="brand-sub">employee check-ins &amp; HR aggregates</span>
           </span>
         </div>
         <div className="topbar-user">
