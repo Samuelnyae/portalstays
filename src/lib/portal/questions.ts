@@ -72,7 +72,7 @@ export function formatDateTime(iso: string): string {
   }).format(date);
 }
 
-/** "2026-10" -> "October 2026". */
+/** Format a YYYY-MM reporting period, such as "2026-11". */
 export function formatMonth(value: string): string {
   const match = /^(\d{4})-(\d{2})$/.exec(value);
   if (!match) return value;

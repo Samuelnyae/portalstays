@@ -31,7 +31,7 @@ import {
   requireUuid,
   validationError,
 } from "./validation";
-import { REPORTING_MONTH } from "./config";
+import { getReportingMonth } from "./config";
 
 interface HttpResponse {
   status: number;
@@ -394,9 +394,10 @@ export async function handle(state: AppState, request: Request): Promise<HttpRes
       }
       const records = await state.repo.submittedRecords(user.organization_id, teamId);
       const eligible = await state.repo.eligibleCount(user.organization_id, teamId);
-      const aggregate = summarize(records, eligible);
+      const reportingMonth = getReportingMonth();
+      const aggregate = summarize(records, eligible, reportingMonth);
       return response(200, {
-        reporting_month: `${REPORTING_MONTH.year}-${String(REPORTING_MONTH.month).padStart(2, "0")}`,
+        reporting_month: `${reportingMonth.year}-${String(reportingMonth.month).padStart(2, "0")}`,
         team_id: teamId,
         respondent_count: aggregate.respondent_count,
         eligible_count: aggregate.eligible_count,

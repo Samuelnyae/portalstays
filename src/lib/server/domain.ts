@@ -2,7 +2,8 @@
  * Pure domain logic: wellbeing scoring and the monthly aggregate with the
  * minimum-respondent suppression threshold. No DB, no framework.
  */
-import { MIN_RESPONDENTS, REPORTING_MONTH } from "./config";
+import { getReportingMonth, MIN_RESPONDENTS } from "./config";
+import type { ReportingMonth } from "./config";
 
 export interface SubmittedRecord {
   employee_id: string;
@@ -33,13 +34,13 @@ export function calculateScore(
   return roundOneDecimal((total * 10) / 3);
 }
 
-/** The [start, end) UTC window of the fixed reporting month. */
-function monthWindow(): { start: Date; end: Date } {
-  const start = new Date(Date.UTC(REPORTING_MONTH.year, REPORTING_MONTH.month - 1, 1));
+/** The [start, end) UTC window of the reporting month. */
+function monthWindow(reportingMonth: ReportingMonth): { start: Date; end: Date } {
+  const start = new Date(Date.UTC(reportingMonth.year, reportingMonth.month - 1, 1));
   const end =
-    REPORTING_MONTH.month === 12
-      ? new Date(Date.UTC(REPORTING_MONTH.year + 1, 0, 1))
-      : new Date(Date.UTC(REPORTING_MONTH.year, REPORTING_MONTH.month, 1));
+    reportingMonth.month === 12
+      ? new Date(Date.UTC(reportingMonth.year + 1, 0, 1))
+      : new Date(Date.UTC(reportingMonth.year, reportingMonth.month, 1));
   return { start, end };
 }
 
@@ -52,8 +53,9 @@ function monthWindow(): { start: Date; end: Date } {
 export function summarize(
   submissions: SubmittedRecord[],
   eligibleCount: number,
+  reportingMonth: ReportingMonth = getReportingMonth(),
 ): WellbeingSummary {
-  const { start, end } = monthWindow();
+  const { start, end } = monthWindow(reportingMonth);
 
   // Filter to the window first, so an out-of-window submission can never
   // displace an in-window one.

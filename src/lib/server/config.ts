@@ -3,8 +3,15 @@
 /** Access tokens last 30 minutes; the browser keeps the token for the tab only. */
 export const TOKEN_TTL_SECONDS = 30 * 60;
 
-/** Fixed reporting month: October 2026, from the first day to the end of the month, UTC. */
-export const REPORTING_MONTH: { year: number; month: number } = { year: 2026, month: 10 };
+export interface ReportingMonth {
+  year: number;
+  month: number;
+}
+
+/** Current reporting month, using UTC to match the timestamps saved by the API. */
+export function getReportingMonth(now: Date = new Date()): ReportingMonth {
+  return { year: now.getUTCFullYear(), month: now.getUTCMonth() + 1 };
+}
 
 /** With fewer respondents than this, the aggregate average is withheld. */
 export const MIN_RESPONDENTS = 5;
